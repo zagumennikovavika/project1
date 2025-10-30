@@ -301,7 +301,7 @@ char* student1_process(int src_base, int dest_base, const char* number){
     char* converted = decimal_to_string(decimal_value, dest_base, 12);
 
     return converted;
-}
+} //mjnh
 
 
 
