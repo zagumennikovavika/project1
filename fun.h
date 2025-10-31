@@ -111,10 +111,20 @@ int validate_number(const char* number, int base) {
 
 // 2. Conversion functions
 double string_to_decimal(const char* number, int base) {
+    // Checking for NULL
+    if (number == NULL) {
+        return 0.0;
+    }
     // Skipping the initial spaces
     while (isspace(*number)) {
         number++;
     }
+
+    // Checking for an empty string after spaces
+    if (*number == '\0') {
+        return 0.0;
+    }
+
     // Checking the sign
     int sign = 1;
     if (*number == '+') {
@@ -123,29 +133,40 @@ double string_to_decimal(const char* number, int base) {
         sign = -1;
         number++;
     }
-    
-     char integer_part[256], fractional_part[256];
+
+    // Checking that there are numbers after the sign
+    if (*number == '\0') {
+        return 0.0;
+    }
+    // Arrays for storing whole and fractional parts of a number
+    char integer_part[256] = {0};  
+    char fractional_part[256] = {0}; 
     split_number_string(number, integer_part, fractional_part);
 
+    // Checking that the whole part is not empty
+    if (integer_part[0] == '\0') {
+        return 0.0;
+    }
+    // Converting the whole part
     double integer_result = 0.0;
     for (const char* ptr = integer_part; *ptr != '\0'; ptr++) {
         int value = char_to_value(*ptr);
         if (value == -1 || value >= base) {
-            return 0.0;
+            return 0.0; // Invalid character
         }
         integer_result = integer_result * base + value;
     }
-
+    // Converting the fractional part
     double fractional_result = 0.0;
     if (strlen(fractional_part) > 0) {
         double multiplier = 1.0 / base;
         for (const char* ptr = fractional_part; *ptr != '\0'; ptr++) {
             int value = char_to_value(*ptr);
             if (value == -1 || value >= base) {
-                return 0.0;
+                return 0.0; // Invalid character
             }
             fractional_result += value * multiplier;
-            multiplier /= base;
+            multiplier /= base; // Reducing the weight for the next figure
         }
     }
 
@@ -161,6 +182,7 @@ char* decimal_to_string(double number, int base, int precision) {
     // Checking whether the passed argument is an undefined number 
     if (isnan(number)) {
         char* result = (char*)malloc(4);  // Allocate 4 bytes of memory
+        if (result == NULL) return NULL;
         strcpy(result, "NaN"); // Writing the string "NaN" to the allocated memory area
         return result;
     }
@@ -168,11 +190,13 @@ char* decimal_to_string(double number, int base, int precision) {
     if (isinf(number)) {
         if (number > 0) { // Positive infinity
             char* result = (char*)malloc(4);  // "Inf" + '\0' = 4 bytes
+            if (result == NULL) return NULL;
             strcpy(result, "Inf");
             return result;
         } else {
             // Negative infinity
             char* result = (char*)malloc(5);  // "-Inf" + '\0' = 5 bytes
+            if (result == NULL) return NULL;
             strcpy(result, "-Inf");
             return result;
         }
@@ -183,7 +207,7 @@ char* decimal_to_string(double number, int base, int precision) {
         if (precision > 0) { 
             result = (char*)malloc(precision + 4); // "0." + precision digits + '\0'
             if (result == NULL) return NULL;
-            sprintf(result, "0.%.*s", precision, "000000000000"); 
+            snprintf(result, precision + 4, "0.%.*s", precision, "000000000000");
         } else {
             result = (char*)malloc(2); // "0" + '\0'
             if (result == NULL) return NULL;
@@ -199,15 +223,15 @@ char* decimal_to_string(double number, int base, int precision) {
         number = -number;
     }
     
-    // Целая и дробная части числа
+    // Separation of whole and fractional parts
     double integer_part_d = floor(number);
     double fractional_part = number - integer_part_d;
 
-    // Буфер для хранения целых значений
+    // Buffer for the whole part
     char integer_buffer[256] = {0};
     int integer_index = 0;
 
-    // Последовательное деление для вычисления целой части
+    // Sequential division to calculate the whole part
     long integer_part = (long)integer_part_d;
     if (integer_part == 0) {
         integer_buffer[integer_index++] = '0';
@@ -218,14 +242,14 @@ char* decimal_to_string(double number, int base, int precision) {
             integer_part = integer_part / base;
         }
     }
-     // Разворот целой части вручную без функции
+     // Reversal of the whole part
     for (int i = 0, j = integer_index - 1; i < j; i++, j--) {
         char temp = integer_buffer[i];
         integer_buffer[i] = integer_buffer[j];
         integer_buffer[j] = temp;
     }
 
-    // Дробная часть (переводим в нужную систему счисления)
+    // Converting the fractional part
     char fractional_buffer[256];
     int fractional_index = 0;
     double temp_fractional = fractional_part;
@@ -236,7 +260,7 @@ char* decimal_to_string(double number, int base, int precision) {
         temp_fractional -= digit;
     }
 
-    // Подготавливаем итоговую строку
+    // Formation of the final line
     int total_len = (sign == -1) + integer_index + ((fractional_index > 0) ? fractional_index + 1 : 0) + 1;
     char* result = (char*)malloc(total_len);
     if (result == NULL) {
@@ -256,7 +280,7 @@ char* decimal_to_string(double number, int base, int precision) {
         memcpy(result + index, fractional_buffer, fractional_index);
         index += fractional_index;
     }
-    result[index] = '\0';
+    result[index] = '\0'; 
 
     return result;
 }
@@ -301,7 +325,7 @@ char* student1_process(int src_base, int dest_base, const char* number){
     char* converted = decimal_to_string(decimal_value, dest_base, 12);
 
     return converted;
-} //mjnh
+} 
 
 
 
