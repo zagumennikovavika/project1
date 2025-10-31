@@ -8,6 +8,16 @@
 #include <ctype.h>
 #include <math.h>
 
+int char_to_value(char c);
+char value_to_char(int value);
+void split_number_string(const char* number, char* integer_part, char* fractional_part);
+int validate_base(int base);
+int validate_number(const char* number, int base);
+double string_to_decimal(const char* number, int base);
+char* decimal_to_string(double number, int base, int precision);
+char* student1_process(int src_base, int dest_base, const char* number);
+
+#endif // STUDENT1_H
 
 // 3. Auxiliary functions
 int char_to_value(char c) {
@@ -265,7 +275,7 @@ char* decimal_to_string(double number, int base, int precision) {
     char* result = (char*)malloc(total_len);
     if (result == NULL) {
         perror("Ошибка выделения памяти");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
 
     int index = 0;
@@ -310,12 +320,12 @@ char* decimal_to_string(double number, int base, int precision) {
 char* student1_process(int src_base, int dest_base, const char* number){
     // Checking the validity of the bases of number systems
     if (!validate_base(src_base) || !validate_base(dest_base)) {
-        return "Incorrect bases of number systems";
+        return strdup("Incorrect bases of number systems");
     }
 
     // Checking the validity of the input number
     if (!validate_number(number, src_base)) {
-        return "Incorrect number for the selected number system";
+        return strdup("Incorrect number for the selected number system");
     }
 
     // Conversion to decimal system
@@ -329,4 +339,3 @@ char* student1_process(int src_base, int dest_base, const char* number){
 
 
 
-#endif // STUDENT1_H
