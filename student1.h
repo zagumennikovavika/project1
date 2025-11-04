@@ -318,12 +318,12 @@ char* student1_process(int src_base, int dest_base, const char* number){
     if (!validate_number(number, src_base)) {
         return strdup("Incorrect number for the selected number system");
     }
-
-    // Conversion to decimal system
-    double decimal_value = string_to_decimal(number, src_base);
-
-    // Conversion to the target number system
-    char* converted = decimal_to_string(decimal_value, dest_base, 12);
+    
+    double decimal_value = string_to_decimal(number, src_base); // Conversion to decimal system 
+    char* converted = decimal_to_string(decimal_value, dest_base, 12); // Conversion to the target number system
+    if (converted == NULL) {
+        return strdup("Memory allocation error");
+    }
 
     return converted;
 } 
