@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include "student1.h"
 
-int main(int src_base, int dest_base, const char* coord) {
-    char* result = student1_process(src_base, dest_base, coord);
+int main(void) {
+    int src_base = 10;
+    int dest_base = 2;
+    const char* number = "13";
+    
+    char* result = student1_process(src_base, dest_base, number);
     if (result != NULL) {
         printf("Результат преобразования: %s\n", result);
         free(result);  
