@@ -122,7 +122,7 @@ double string_to_decimal(const char* number, int base) {
         return 0.0;
     }
 
-    /* Checking the sign */
+    /* Determining the sign of a number */
     int sign = 1;
     if (*number == '+') {
         number++;
@@ -173,8 +173,6 @@ double string_to_decimal(const char* number, int base) {
 
 
 
-
-
 char* decimal_to_string(double number, int base, int precision) {
 
     /* Zero processing */
@@ -200,7 +198,7 @@ char* decimal_to_string(double number, int base, int precision) {
     }
     
     /* Separation of whole and fractional parts */
-    double integer_part_d = floor(number);
+    double integer_part_d = (long long)number;
     double fractional_part = number - integer_part_d;
 
     char integer_buffer[256] = {0};
