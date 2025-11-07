@@ -71,21 +71,38 @@ int validate_base(int base) {
 } 
 
 int validate_number(const char* number, int base) {
-    /* Checking the validity of the foundation */
     if (!validate_base(base)) { 
         return 0;
     }
+    
+    if (number == NULL || number[0] == '\0') {
+        return 0;
+    }
+    
     int point = 0; 
+    int digit_before_point = 0;  
+    int digit_after_point = 0;   
+    
     for (const char* ptr = number; *ptr != '\0'; ptr++) {
         char ch = *ptr;
-        /* Checking valid characters */
+        
         if ((ch >= '0' && ch <= '9')) {
             if (ch - '0' >= base) {
                 return 0; 
             }
+            if (point == 0) {
+                digit_before_point = 1;  
+            } else {
+                digit_after_point = 1;   
+            }
         } else if ((ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f')) {
             if (tolower(ch) - 'a' + 10 >= base) {
                 return 0; 
+            }
+            if (point == 0) {
+                digit_before_point = 1;  
+            } else {
+                digit_after_point = 1;   
             }
         } else if (ch == '.') {
             point++;
@@ -96,11 +113,17 @@ int validate_number(const char* number, int base) {
             return 0; 
         }
     }
+    
+    if (!digit_before_point) {
+        return 0;
+    }
+    
+    if (point > 0 && !digit_after_point) {
+        return 0;
+    }
+    
     return 1; 
 }
-
-
-
 
 
 
@@ -129,11 +152,6 @@ double string_to_decimal(const char* number, int base) {
     } else if (*number == '-') {
         sign = -1;
         number++;
-    }
-
-    /* Checking that there are numbers after the sign */
-    if (*number == '\0') {
-        return 0.0;
     }
     
     char integer_part[256] = {0};  
@@ -256,7 +274,6 @@ char* decimal_to_string(double number, int base, int precision) {
 
     return result;
 }
-
 
 
 /* 4. Main function */
