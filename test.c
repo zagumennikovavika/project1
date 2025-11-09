@@ -194,23 +194,23 @@ void test_main() {
     char* result;
 
     result = student1_process(3, 12, "102.11");
-    printf("3-чное '102.11' в 12-чной системе: %s\n", result);
+    printf("Ternary '102.11' in duodecimal system: %s\n", result);
     free(result);
 
     result = student1_process(8, 16, "45.3");
-    printf("8-чное '45.3' в 16-чной системе: %s\n", result);
+    printf("Octal '45.3' in hexadecimal system: %s\n", result);
     free(result);
 
     result = student1_process(16, 10, "D.F");
-    printf("16-чное 'D.F' в 10-чной системе: %s\n", result);
+    printf("Hexadecimal 'D.F' in decimal system: %s\n", result);
     free(result);
 
     result = student1_process(2, 10, "1011.01");
-    printf("2-чное '1011.01' в 10-чной системе: %s\n", result);
+    printf("Binary '1011.01' in decimal system: %s\n", result);
     free(result);
 
     result = student1_process(10, 2, "31.75");
-    printf("10-чное '31.75' в 2-чной системе: %s\n", result);
+    printf("Decimal '31.75' in binary system: %s\n", result);
     free(result);
 
     printf("Main tests completed!\n");
