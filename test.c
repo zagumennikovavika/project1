@@ -269,7 +269,7 @@ void test_calculate_median() {
     printf("Testing calculate_median\n");
     /*An even number of elements*/
     double arr_1[] = { 5.23, 2.14, 8.735, 1.444, 4.877 };
-    assert(calculate_median(arr_1, 5) == 4.877);
+    assert(fabs(calculate_median(arr_1, 5) - 4.877) < 1e-10);
 
     /*An odd number of elements*/
     double arr_2[] = { 9832.4561, 56454.311, 1567.5445, 87.024 };
@@ -290,8 +290,8 @@ void test_find_min_max() {
     /*Ordinary*/
     double arr_1[] = { 10.12, 2.1, 30.23, 4.984, 25.004 };
     find_min_max(arr_1, 5, &min, &max);
-    assert(min == 2.1);
-    assert(max == 30.23);
+    assert(fabs(min - 2.1) < 1e-10);
+    assert(fabs(max - 30.23) < 1e-10);
 
     /*Empty array*/
     double arr_2[] = { 0 };
