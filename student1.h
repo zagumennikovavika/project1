@@ -22,26 +22,22 @@ char* student1_process(int src_base, int dest_base, const char* number);
 /* 3. Auxiliary functions */
 int char_to_value(char c) {
     /* Check whether the symbol is a number */
-    if (c >= '0' && c <= '9') {
+    if (c >= '0' && c <= '9') 
         return c - '0';      
-    }
-    else if (c >= 'A' && c <= 'F') {
+    else if (c >= 'A' && c <= 'F') 
         return c - 'A' + 10; 
-    }
-    else if (c >= 'a' && c <= 'f') {
+    else if (c >= 'a' && c <= 'f') 
         return c - 'a' + 10; 
-    }
     return -1; 
 }
 
 
 char value_to_char(int value) {
     /* Converting a number to a character */
-    if (value >= 0 && value <= 9) {
+    if (value >= 0 && value <= 9) 
         return '0' + value;
-    } else if (value >= 10 && value <= 15) {
+    else if (value >= 10 && value <= 15) 
         return 'A' + (value - 10);
-    }
     return '?'; 
 }
 
@@ -64,20 +60,17 @@ void split_number_string(const char* number, char* integer_part, char* fractiona
 
 /* 1. Validation functions */
 int validate_base(int base) {   
-    if (2 <= base && base <= 16){   
+    if (2 <= base && base <= 16)
         return 1;
-    }
     return 0;
 } 
 
 int validate_number(const char* number, int base) {
-    if (!validate_base(base)) { 
+    if (!validate_base(base)) 
         return 0;
-    }
     
-    if (number == NULL || number[0] == '\0') {
+    if (number == NULL || number[0] == '\0') 
         return 0;
-    }
     
     int point = 0; 
     int digit_before_point = 0;  
@@ -87,41 +80,33 @@ int validate_number(const char* number, int base) {
         char ch = *ptr;
         
         if ((ch >= '0' && ch <= '9')) {
-            if (ch - '0' >= base) {
+            if (ch - '0' >= base) 
                 return 0; 
-            }
-            if (point == 0) {
+            if (point == 0) 
                 digit_before_point = 1;  
-            } else {
+            else
                 digit_after_point = 1;   
-            }
         } else if ((ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f')) {
-            if (tolower(ch) - 'a' + 10 >= base) {
+            if (tolower(ch) - 'a' + 10 >= base) 
                 return 0; 
-            }
-            if (point == 0) {
+            if (point == 0) 
                 digit_before_point = 1;  
-            } else {
-                digit_after_point = 1;   
-            }
+            else 
+                digit_after_point = 1;    
         } else if (ch == '.') {
             point++;
-            if (point > 1) {
+            if (point > 1) 
                 return 0; 
-            }
         } else {
             return 0; 
         }
     }
     
-    if (!digit_before_point) {
+    if (!digit_before_point) 
         return 0;
-    }
     
-    if (point > 0 && !digit_after_point) {
+    if (point > 0 && !digit_after_point) 
         return 0;
-    }
-    
     return 1; 
 }
 
@@ -132,18 +117,16 @@ int validate_number(const char* number, int base) {
 /* 2. Conversion functions */
 double string_to_decimal(const char* number, int base) {
     /* Checking for NULL */
-    if (number == NULL) {
+    if (number == NULL) 
         return 0.0;
-    }
+
     /* Skipping the initial spaces */
-    while (isspace(*number)) {
+    while (isspace(*number)) 
         number++;
-    }
 
     /* Checking for an empty string after spaces */
-    if (*number == '\0') {
+    if (*number == '\0') 
         return 0.0;
-    }
 
     /* Determining the sign of a number */
     int sign = 1;
@@ -159,16 +142,15 @@ double string_to_decimal(const char* number, int base) {
     split_number_string(number, integer_part, fractional_part);
 
     /* Checking that the whole part is not empty */
-    if (integer_part[0] == '\0') {
+    if (integer_part[0] == '\0') 
         return 0.0;
-    }
+
     /* Converting the whole part */
     double integer_result = 0.0;
     for (const char* ptr = integer_part; *ptr != '\0'; ptr++) {
         int value = char_to_value(*ptr);
-        if (value == -1 || value >= base) {
+        if (value == -1 || value >= base) 
             return 0.0; 
-        }
         integer_result = integer_result * base + value;
     }
     /* Converting the fractional part */
@@ -177,9 +159,8 @@ double string_to_decimal(const char* number, int base) {
         double k = 1.0 / base;
         for (const char* ptr = fractional_part; *ptr != '\0'; ptr++) {
             int value = char_to_value(*ptr);
-            if (value == -1 || value >= base) {
+            if (value == -1 || value >= base) 
                 return 0.0; 
-            }
             fractional_result += value * k;
             k /= base; 
         }
@@ -254,14 +235,12 @@ char* decimal_to_string(double number, int base, int precision) {
     /* Formation of the final line */
     int total_len = (sign == -1) + integer_index + ((fractional_index > 0) ? fractional_index + 1 : 0) + 1;
     char* result = (char*)malloc(total_len);
-    if (result == NULL) {
+    if (result == NULL) 
         return NULL;
-    }
 
     int index = 0;
-    if (sign == -1) {
+    if (sign == -1) 
         result[index++] = '-';
-    }
     memcpy(result + index, integer_buffer, integer_index); 
     index += integer_index; 
 
@@ -279,20 +258,17 @@ char* decimal_to_string(double number, int base, int precision) {
 /* 4. Main function */
 char* student1_process(int src_base, int dest_base, const char* number){
     /* Checking the validity of the bases of number systems*/
-    if (!validate_base(src_base) || !validate_base(dest_base)) {
+    if (!validate_base(src_base) || !validate_base(dest_base)) 
         return strdup("Incorrect bases of number systems");
-    }
 
     /* Checking the validity of the input number */
-    if (!validate_number(number, src_base)) {
+    if (!validate_number(number, src_base)) 
         return strdup("Incorrect number for the selected number system");
-    }
     
     double decimal_value = string_to_decimal(number, src_base); 
     char* converted = decimal_to_string(decimal_value, dest_base, 12); 
-    if (converted == NULL) {
+    if (converted == NULL) 
         return strdup("Memory allocation error");
-    }
 
     return converted;
 } 
